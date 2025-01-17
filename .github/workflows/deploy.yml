@@ -40,7 +40,7 @@ jobs:
             pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
             pm2 start app.js --name volley-backend
           
-            echo "✅ Deployment erfolgreich!"
+            echo "✅ Dekkkkployment erfolgreich!"
           
           
             echo "✅ Deployment erfolgreich!"
