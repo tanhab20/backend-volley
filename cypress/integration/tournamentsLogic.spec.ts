@@ -1,7 +1,7 @@
 describe('Tournament API Tests', () => {
 
     it('should fetch all tournaments', () => {
-        cy.request('GET', 'http://localhost:4000/tournaments')
+        cy.request('GET', 'https://kavolley.uber.space/api/tournaments')
             .its('status')
             .should('equal', 200);
     });
@@ -16,7 +16,7 @@ describe('Tournament API Tests', () => {
 
         cy.request({
             method: 'POST',
-            url: 'http://localhost:4000/tournaments',
+            url: 'https://kavolley.uber.space/api/tournaments',
             body: incompleteTournament,
             failOnStatusCode: false,
         }).then((response) => {
@@ -34,12 +34,12 @@ describe('Tournament API Tests', () => {
             description: 'Ein Hallenturnier mit Teams aus ganz Deutschland.',
         };
 
-        cy.request('POST', 'http://localhost:4000/tournaments', tournamentToFetch).then((postResponse) => {
+        cy.request('POST', 'https://kavolley.uber.space/api/tournaments', tournamentToFetch).then((postResponse) => {
             const { _id } = postResponse.body;
 
             expect(_id).to.match(/^[a-f\d]{24}$/i);
 
-            cy.request('GET', `http://localhost:4000/tournaments/${_id}`).then((getResponse) => {
+            cy.request('GET', `https://kavolley.uber.space/api/tournaments/${_id}`).then((getResponse) => {
                 expect(getResponse.status).to.eq(200);
 
                 expect(getResponse.body).to.have.property('_id', _id);
@@ -89,10 +89,10 @@ describe('Tournament API Tests', () => {
             description: 'Dies ist ein Test-Turnier, das gelöscht wird.',
         };
 
-        cy.request('POST', 'http://localhost:4000/tournaments', newTournament).then((postResponse) => {
+        cy.request('POST', 'https://kavolley.uber.space/api/tournaments', newTournament).then((postResponse) => {
             const { _id } = postResponse.body;
 
-            cy.request('DELETE', `http://localhost:4000/tournaments/${_id}`)
+            cy.request('DELETE', `https://kavolley.uber.space/api/tournaments/${_id}`)
                 .its('status')
                 .should('equal', 200);
         });
@@ -103,7 +103,7 @@ describe('Tournament API Tests', () => {
 
         cy.request({
             method: 'GET',
-            url: `http://localhost:4000/tournaments/${nonExistentID}`,
+            url: `https://kavolley.uber.space/api/tournaments/${nonExistentID}`,
             failOnStatusCode: false,
         }).then((response) => {
             expect(response.status).to.eq(404);
@@ -120,7 +120,7 @@ describe('Tournament API Tests', () => {
             description: 'Ein spannendes Turnier für Sommerliebhaber.',
         };
 
-        cy.request('POST', 'http://localhost:4000/tournaments', newTournament).then((response) => {
+        cy.request('POST', 'https://kavolley.uber.space/api/tournaments', newTournament).then((response) => {
             expect(response.status).to.eq(201);
             expect(response.body).to.have.property('name', newTournament.name);
             expect(response.body).to.have.property('description', newTournament.description);
@@ -136,7 +136,7 @@ describe('Tournament API Tests', () => {
             description: 'Ein aufregendes Turnier im Frühling.'
         };
 
-        cy.request('POST', 'http://localhost:4000/tournaments', newTournament).then((response) => {
+        cy.request('POST', 'https://kavolley.uber.space/api/tournaments', newTournament).then((response) => {
             expect(response.status).to.eq(201);
             expect(response.body).to.have.property('name', newTournament.name);
             expect(response.body).to.have.property('date');
