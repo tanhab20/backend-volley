@@ -30,7 +30,7 @@ jobs:
             fi
           
           # 3️⃣ Wechsle ins Repository
-            cd volley-backend || exit 1
+            cd backend-volley || exit 1
             git pull origin main
 
             # 4️⃣ Installiere Abhängigkeiten & baue das Projekt
@@ -40,7 +40,9 @@ jobs:
             pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
             pm2 start app.js --name volley-backend
           
-            echo "✅ Dekkkkployment erfolgreich!"
+            
+          
+          
           
           
             echo "✅ Deployment erfolgreich!"
