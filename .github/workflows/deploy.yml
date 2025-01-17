@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install sshpassjjj
+      - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
       - name: Deploy to Server
@@ -23,7 +23,7 @@ jobs:
             set -e  # Stoppt bei einem Fehler
           
           
-            # 2️⃣ Repo klonen oder updaten
+            # 2️⃣ Repo klonen oder ujjjpdaten
             if [ ! -d "volley-backend/.git" ]; then
               echo "⚠️ Repo nicht gefunden, klone es..."
               rm -rf volley-backend
