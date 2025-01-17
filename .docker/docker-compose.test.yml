@@ -1,0 +1,13 @@
+    version: '3'
+
+    services:
+      cypress:
+        build:
+          context: ..
+          dockerfile: .docker/Dockerfile
+        environment:
+          - CYPRESS_BASE_URL=http://host.docker.internal:4000/tournaments
+        volumes:
+          - ../cypress/results:/app/cypress/results
+        command: >
+          cypress run --browser chrome --env --disable-gpu
