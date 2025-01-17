@@ -1,4 +1,3 @@
-
 name: Deploy to Uberspace
 
 on:
@@ -23,11 +22,12 @@ jobs:
             set -e  # Stoppt bei einem Fehler
           
           
-            # 2️⃣ Repo klonen oder ujjjpdaten
+            # 2️⃣ Repo klonen oder updaten
             if [ ! -d "volley-backend/.git" ]; then
               echo "⚠️ Repo nicht gefunden, klone es..."
               rm -rf volley-backend
               git clone https://github.com/tanhab20/backend-volley.git
+            fi
           
           # 3️⃣ Wechsle ins Repository
             cd volley-backend || exit 1
