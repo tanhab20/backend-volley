@@ -3,7 +3,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:4000/tournaments",
+    baseUrl: "https://kavolley.uber.space/api/tournaments",
     specPattern: "cypress/integration/**/*.spec.ts",
     setupNodeEvents(on, config) {
       // Plugin in Node-Setup-Funktion laden
