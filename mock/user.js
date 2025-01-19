@@ -32,4 +32,10 @@ exports.users = [
         password: "hello",
         role: "user",
     },
+    {
+        id: 7,
+        username: "vk",
+        password: "test",
+        role: "user",
+    },
 ];
