@@ -38,6 +38,7 @@ jobs:
           
             #  PM2 neu starten (falls läuft) oder starten
             pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
+            pm2 delete backend-volley || true  # Fehler ignorieren, falls Prozess nicht existiert
             pm2 start app.js --name backend-volley
           
             
