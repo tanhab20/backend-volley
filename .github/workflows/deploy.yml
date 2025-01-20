@@ -11,39 +11,36 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 #holt sich den aktuellen code des repos
 
       - name: Install sshpass
-        run: sudo apt-get install -y sshpass
+        run: sudo apt-get install -y sshpass #sshpass installieren damit das password automatisch übergeben wird
 
       - name: Deploy to Server
         run: |
-          sshpass -p "${{ secrets.UBERSPACE_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.UBERSPACE_USER }}@${{ secrets.UBERSPACE_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.UBERSPACE_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.UBERSPACE_USER }}@${{ secrets.UBERSPACE_HOST }} << 'EOF' #ssh verbindung herstellen
             set -e  # Stoppt bei einem Fehler
           
           
-            # 2️⃣ Repo klonen oder updaten
-            if [ ! -d "volley-backend/.git" ]; then
-              echo "⚠️ Repo nicht gefunden, klone es..."
+            #  Repo klonen oder updaten
+            if [ ! -d "backend-volley.git" ]; then
+              echo "Repo nicht gefunden, klone es..."
               rm -rf backend-volley
               git clone https://github.com/tanhab20/backend-volley.git
             fi
           
-          # 3️⃣ Wechsle ins Repository
-            cd backend-volley || exit 1
+          #  Wechsle ins Repository
+            cd backend-volley
             git pull origin main
 
-            # 4️⃣ Installiere Abhängigkeiten & baue das Projekt
+            #  Installiere Abhängigkeiten & baue das Projekt
             npm install
           
-            # 5️⃣ PM2 neu starten (falls läuft) oder starten
-            pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
-            pm2 start app.js --name volley-backend
+            #  PM2 neu starten (falls läuft) oder starten
+            pm2 delete backend-volley || true  # Fehler ignorieren, falls Prozess nicht existiert
+            pm2 start app.js --name backend-volley
           
             
           
-          
-          
-          
-            echo "✅ Deployment erfolgreich!"
+            echo " Deployment erfolgreich!"
           EOF
