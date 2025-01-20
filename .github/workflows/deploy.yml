@@ -23,22 +23,22 @@ jobs:
           
           
             #  Repo klonen oder updaten
-            if [ ! -d "backend-volley.git" ]; then
+            if [ ! -d "backend-volley/.git" ]; then
               echo "Repo nicht gefunden, klone es..."
               rm -rf backend-volley
               git clone https://github.com/tanhab20/backend-volley.git
             fi
           
           #  Wechsle ins Repository
-            cd backend-volley
+            cd backend-volley || exit 1
             git pull origin main
 
             #  Installiere Abhängigkeiten & baue das Projekt
             npm install
           
             #  PM2 neu starten (falls läuft) oder starten
-            pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
-            pm2 start app.js --name volley-backend
+            pm2 delete backend-volley || true  # Fehler ignorieren, falls Prozess nicht existiert
+            pm2 start app.js --name backend-volley
           
             
           
