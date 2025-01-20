@@ -36,8 +36,8 @@ jobs:
             #  Installiere Abhängigkeiten & baue das Projekt
             npm install
           
-            #  PM2 neu starten (falls läuft) oder starten
-            pm2 delete volley-backend || true  # Fehler ignorieren, falls Prozess nicht existiert
+            #  PM2 neu starten (falls läuft) oder starten 
+            # pm2 ist ein prozess management tool um node.js anwendungen zu starten
             pm2 delete backend-volley || true  # Fehler ignorieren, falls Prozess nicht existiert
             pm2 start app.js --name backend-volley
           

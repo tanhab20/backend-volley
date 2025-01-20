@@ -42,9 +42,9 @@ export const users: IUser[] = [
 
     {
         id: 7,
-        username: "vk",
-        password: "test",
-        role: "user",
+        username: "test2",
+        password: "test2",
+        role: "admin",
 
     },
 
