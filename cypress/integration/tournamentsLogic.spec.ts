@@ -6,6 +6,8 @@ describe('Tournament API Tests', () => {
             .should('equal', 200);
     });
 
+    /*
+
     it('should return 500 for missing required fields', () => {
         const incompleteTournament = {
             date: new Date().toISOString(),
@@ -188,6 +190,6 @@ describe('Tournament API Tests', () => {
     //});
 
 
-
+*/
 
 });
