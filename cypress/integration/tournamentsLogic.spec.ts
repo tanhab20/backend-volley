@@ -6,7 +6,7 @@ describe('Tournament API Tests', () => {
             .should('equal', 200);
     });
 
-    /*
+
 
     it('should return 500 for missing required fields', () => {
         const incompleteTournament = {
@@ -27,6 +27,7 @@ describe('Tournament API Tests', () => {
         });
     });
 
+    /*
     it('should fetch a specific tournament by ID', () => {
         const tournamentToFetch = {
             name: 'Hallenmeisterschaft',
