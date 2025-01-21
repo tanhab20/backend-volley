@@ -10,11 +10,18 @@ export const users: IUser[] = [
 
     },
 
-
     {
         id: 2,
         username: "admin",
         password: "admin",
+        role: "admin",
+
+    },
+
+    {
+        id: 3,
+        username: "test",
+        password: "test",
         role: "admin",
 
     },
