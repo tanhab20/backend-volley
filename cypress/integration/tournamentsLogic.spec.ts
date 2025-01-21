@@ -101,7 +101,7 @@ describe('Tournament API Tests', () => {
                 .should('equal', 200);
         });
     });
-    /*
+
 
     it('should return 404 for a non-existent tournament ID', () => {
         const nonExistentID = '64c3f8e7b4569e001e62e6aa';
@@ -150,6 +150,8 @@ describe('Tournament API Tests', () => {
             expect(response.body).to.have.property('description', newTournament.description);
         });
     });
+
+    /*
 
     //it('should fetch only future tournaments based on the date', () => {
     //    // Turniere erstellen (eins in der Vergangenheit, eins in der Zukunft)
