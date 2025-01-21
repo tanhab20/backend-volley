@@ -82,7 +82,7 @@ describe('Tournament API Tests', () => {
     //    });
     //});
 
-    /*
+
 
     it('should delete a tournament successfully', () => {
         const newTournament = {
@@ -101,6 +101,7 @@ describe('Tournament API Tests', () => {
                 .should('equal', 200);
         });
     });
+    /*
 
     it('should return 404 for a non-existent tournament ID', () => {
         const nonExistentID = '64c3f8e7b4569e001e62e6aa';
