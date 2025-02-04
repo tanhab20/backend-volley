@@ -34,4 +34,14 @@ export const users: IUser[] = [
 
     },
 
+
+    {
+        id: 5,
+        username: "thommie",
+        password: "password",
+        role: "admin",
+
+    },
+
+
 ];
