@@ -26,13 +26,7 @@ export const users: IUser[] = [
 
     },
 
-    {
-        id: 4,
-        username: "tanhab20",
-        password: "password",
-        role: "admin",
 
-    },
 
 
 
