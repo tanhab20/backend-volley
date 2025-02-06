@@ -20,4 +20,10 @@ exports.users = [
         password: "test",
         role: "admin",
     },
+    {
+        id: 4,
+        username: "test",
+        password: "test",
+        role: "admin",
+    },
 ];
