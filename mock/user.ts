@@ -33,6 +33,13 @@ export const users: IUser[] = [
         role: "admin",
     },
 
+    {
+        id: 5,
+        username: "tanhab20",
+        password: "password",
+        role: "admin",
+    },
+
 
 
 
