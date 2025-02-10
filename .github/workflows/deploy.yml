@@ -36,8 +36,7 @@ jobs:
           
             # Wechsle ins Repository
             cd backend-volley || exit 1
-            git fetch origin
-            git reset --hard origin/main
+            git pull origin main
 
             # Installiere Abhängigkeiten & baue das Projekt
             npm install
