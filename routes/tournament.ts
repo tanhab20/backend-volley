@@ -12,18 +12,25 @@ router.get('/', async (req: Request, res: Response) => {
 
         let query: any = {};
 
+        // Locations filtern (nur die Stadt berücksichtigen)
         if (locations) {
-            const locationArray = (locations as string).split(',');
-            query.location = { $in: locationArray };
+            const locationArray = (locations as string)
+                .split(',')
+                .map(location => location.trim());  // Leerzeichen entfernen
+            query.location = { $in: locationArray.map(location => location.split(',')[0].trim()) };
         }
 
+        // Durations filtern
         if (durations) {
-            const durationArray = (durations as string).split(',');
+            const durationArray = (durations as string)
+                .split(',')
+                .map(duration => duration.trim());  // Leerzeichen entfernen
             query.duration = { $in: durationArray };
         }
 
+        // Search-Filter (name durchsuchen)
         if (search) {
-            query.name = { $regex: search, $options: 'i' };
+            query.name = { $regex: new RegExp(search, 'i') };  // Regulärer Ausdruck für den Suchbegriff
         }
 
         const tournaments = await TournamentModel.find(query);

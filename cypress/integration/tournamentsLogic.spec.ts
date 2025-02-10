@@ -1,4 +1,5 @@
 import {ITournament} from "../../interface/ITournament";
+import {mockTournaments} from "../../mock/turnier_mock";
 
 describe('Tournament API Tests', () => {
 
@@ -157,33 +158,28 @@ describe('Tournament API Tests', () => {
         cy.request({
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
-            qs: {
-                locations: 'Berlin,Hamburg'
-            }
+            qs: { locations: 'Berlin,Hamburg' }
         }).then((response) => {
             expect(response.status).to.eq(200);
 
-            // Prüfen, ob die Location im ersten Teil (Stadtname) enthalten ist
-            response.body.forEach((tournament:ITournament) => {
+            // Überprüfen, dass die Location der Turniere Berlin oder Hamburg enthält
+            response.body.forEach((tournament: ITournament) => {
                 const city = tournament.location.split(',')[0].trim();  // Nur die Stadtname prüfen
                 expect(['Berlin', 'Hamburg']).to.include(city);
             });
         });
     });
 
-
     it('should filter tournaments by duration (3 days, 1 day)', () => {
         cy.request({
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
-            qs: {
-                durations: '3 days,1 day'
-            }
+            qs: { durations: '3 days,1 day' }
         }).then((response) => {
             expect(response.status).to.eq(200);
 
             // Überprüfen, dass die Dauer der Turniere entweder 3 Tage oder 1 Tag ist
-            response.body.forEach((tournament:ITournament) => {
+            response.body.forEach((tournament: ITournament) => {
                 expect(['3 days', '1 day']).to.include(tournament.duration);
             });
         });
@@ -193,38 +189,34 @@ describe('Tournament API Tests', () => {
         cy.request({
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
-            qs: {
-                search: 'Schach'
-            }
+            qs: { search: 'Schach' }
         }).then((response) => {
             expect(response.status).to.eq(200);
 
             // Überprüfen, dass der Name des Turniers den Suchbegriff 'Schach' enthält
-            response.body.forEach((tournament:ITournament) => {
+            response.body.forEach((tournament: ITournament) => {
                 expect(tournament.name.toLowerCase()).to.include('schach');
             });
         });
     });
 
-
     it('should filter tournaments by location and duration', () => {
         cy.request({
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
-            qs: {
-                locations: 'Berlin',
-                durations: '3 days'
-            }
+            qs: { locations: 'Berlin', durations: '3 days' }
         }).then((response) => {
             expect(response.status).to.eq(200);
 
             // Überprüfen, dass alle Turniere in Berlin sind und eine Dauer von 3 Tagen haben
-            response.body.forEach((tournament:ITournament) => {
+            response.body.forEach((tournament: ITournament) => {
                 expect(tournament.location).to.include('Berlin');
                 expect(tournament.duration).to.eq('3 days');
             });
         });
     });
+
+
 
 
 
