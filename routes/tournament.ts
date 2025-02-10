@@ -8,34 +8,42 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        console.log("HALLO ICH BIN IM FILTER VERZEICHNIS")
-        const { locations, durations, search } = req.query;
+        console.log("🔍 HALLO ICH BIN IM FILTER VERZEICHNIS");
+
+        // Query-Parameter extrahieren
+        const locations = Array.isArray(req.query.locations)
+            ? req.query.locations
+            : (req.query.locations as string)?.split(',').map(loc => loc.trim());
+
+        const durations = Array.isArray(req.query.durations)
+            ? req.query.durations
+            : (req.query.durations as string)?.split(',').map(dur => dur.trim());
+
+        const search = req.query.search as string;
 
         let query: any = {};
 
-        // Locations filtern (nur die Stadt berücksichtigen)
-        if (locations) {
-            const locationArray = (locations as string)
-                .split(',')
-                .map(location => location.trim());  // Leerzeichen entfernen
-            query.location = { $in: locationArray.map(location => location.split(',')[0].trim()) };
+        // Locations-Filter
+        if (locations?.length) {
+            query.location = { $regex: new RegExp(locations.join('|'), 'i') };
         }
 
-        // Durations filtern
-        if (durations) {
-            const durationArray = (durations as string)
-                .split(',')
-                .map(duration => duration.trim());  // Leerzeichen entfernen
-            query.duration = { $in: durationArray };
+        // Duration-Filter
+        if (durations?.length) {
+            query.duration = { $in: durations };
         }
 
-        // Search-Filter (name durchsuchen)
+        // Search-Filter (Name durchsuchen)
         if (search) {
-            query.name = { $regex: new RegExp(search, 'i') };  // Sucht nach dem Suchbegriff im Namen (Groß-/Kleinschreibung ignoriert)
+            query.name = { $regex: new RegExp(search, 'i') };
         }
-        const tournaments = await TournamentModel.find(query);
+
+        console.log("🛠️ Filter Query:", JSON.stringify(query, null, 2));
+
+        const tournaments = await TournamentModel.find(Object.keys(query).length ? query : {});
         res.status(200).json(tournaments);
     } catch (error) {
+        console.error("❌ Fehler beim Abrufen der Turniere:", error);
         res.status(500).json({ error: 'Fehler beim Abrufen der Turniere' });
     }
 });
