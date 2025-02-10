@@ -1,5 +1,4 @@
 import {ITournament} from "../../interface/ITournament";
-import {mockTournaments} from "../../mock/turnier_mock";
 
 describe('Tournament API Tests', () => {
 
