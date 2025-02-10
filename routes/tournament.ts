@@ -8,7 +8,25 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const tournaments = await TournamentModel.find();
+        const { locations, durations, search } = req.query;
+
+        let query: any = {};
+
+        if (locations) {
+            const locationArray = (locations as string).split(',');
+            query.location = { $in: locationArray };
+        }
+
+        if (durations) {
+            const durationArray = (durations as string).split(',');
+            query.duration = { $in: durationArray };
+        }
+
+        if (search) {
+            query.name = { $regex: search, $options: 'i' };
+        }
+
+        const tournaments = await TournamentModel.find(query);
         res.status(200).json(tournaments);
     } catch (error) {
         res.status(500).json({ error: 'Fehler beim Abrufen der Turniere' });

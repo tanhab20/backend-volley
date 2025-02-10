@@ -3,8 +3,7 @@ import {TournamentModel} from "./Tournaments.model.db";
 import {mockTournaments} from "../mock/turnier_mock";
 
 const DB_URL = 'mongodb://admin:admin@localhost:27017/volley_master?authSource=admin';
-
-
+//const DB_URL = 'mongodb://localhost:27017/volley_master';
 
 export const initializeDB = async () => {
     try {
