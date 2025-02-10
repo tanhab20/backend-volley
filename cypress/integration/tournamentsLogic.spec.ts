@@ -163,12 +163,14 @@ describe('Tournament API Tests', () => {
         }).then((response) => {
             expect(response.status).to.eq(200);
 
-            // Überprüfen, dass alle Turniere entweder in Berlin oder Hamburg stattfinden
+            // Prüfen, ob die Location im ersten Teil (Stadtname) enthalten ist
             response.body.forEach((tournament:ITournament) => {
-                expect(['Berlin', 'Hamburg']).to.include(tournament.location.split(',')[0]);
+                const city = tournament.location.split(',')[0].trim();  // Nur die Stadtname prüfen
+                expect(['Berlin', 'Hamburg']).to.include(city);
             });
         });
     });
+
 
     it('should filter tournaments by duration (3 days, 1 day)', () => {
         cy.request({
@@ -192,17 +194,18 @@ describe('Tournament API Tests', () => {
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
             qs: {
-                search: 'Fußball'
+                search: 'Schach'
             }
         }).then((response) => {
             expect(response.status).to.eq(200);
 
-            // Überprüfen, dass der Name des Turniers den Suchbegriff 'Fußball' enthält
+            // Überprüfen, dass der Name des Turniers den Suchbegriff 'Schach' enthält
             response.body.forEach((tournament:ITournament) => {
-                expect(tournament.name.toLowerCase()).to.include('fußball');
+                expect(tournament.name.toLowerCase()).to.include('schach');
             });
         });
     });
+
 
     it('should filter tournaments by location and duration', () => {
         cy.request({
@@ -215,13 +218,14 @@ describe('Tournament API Tests', () => {
         }).then((response) => {
             expect(response.status).to.eq(200);
 
-            // Überprüfen, dass alle Turniere in Berlin stattfinden und eine Dauer von 3 Tagen haben
+            // Überprüfen, dass alle Turniere in Berlin sind und eine Dauer von 3 Tagen haben
             response.body.forEach((tournament:ITournament) => {
                 expect(tournament.location).to.include('Berlin');
                 expect(tournament.duration).to.eq('3 days');
             });
         });
     });
+
 
 
 
