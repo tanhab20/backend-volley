@@ -153,7 +153,7 @@ describe('Tournament API Tests', () => {
         });
     });
 
-    it('should filter tournaments by location', () => {
+    it('should filter tournaments by location (Berlin, Hamburg)', () => {
         cy.request({
             method: 'GET',
             url: 'https://kavolley.uber.space/api/tournaments',
@@ -162,12 +162,68 @@ describe('Tournament API Tests', () => {
             }
         }).then((response) => {
             expect(response.status).to.eq(200);
-            // Typ für 'tournament' definieren
-            response.body.forEach((tournament: ITournament) => {
-                expect(['Berlin', 'Hamburg']).to.include(tournament.location);
+
+            // Überprüfen, dass alle Turniere entweder in Berlin oder Hamburg stattfinden
+            response.body.forEach((tournament:ITournament) => {
+                expect(['Berlin', 'Hamburg']).to.include(tournament.location.split(',')[0]);
             });
         });
     });
+
+    it('should filter tournaments by duration (3 days, 1 day)', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: {
+                durations: '3 days,1 day'
+            }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+
+            // Überprüfen, dass die Dauer der Turniere entweder 3 Tage oder 1 Tag ist
+            response.body.forEach((tournament:ITournament) => {
+                expect(['3 days', '1 day']).to.include(tournament.duration);
+            });
+        });
+    });
+
+    it('should filter tournaments by search term in name', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: {
+                search: 'Fußball'
+            }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+
+            // Überprüfen, dass der Name des Turniers den Suchbegriff 'Fußball' enthält
+            response.body.forEach((tournament:ITournament) => {
+                expect(tournament.name.toLowerCase()).to.include('fußball');
+            });
+        });
+    });
+
+    it('should filter tournaments by location and duration', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: {
+                locations: 'Berlin',
+                durations: '3 days'
+            }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+
+            // Überprüfen, dass alle Turniere in Berlin stattfinden und eine Dauer von 3 Tagen haben
+            response.body.forEach((tournament:ITournament) => {
+                expect(tournament.location).to.include('Berlin');
+                expect(tournament.duration).to.eq('3 days');
+            });
+        });
+    });
+
+
 
     /*
 
