@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
+        console.log("HALLO ICH BIN IM FILTER VERZEICHNIS")
         const { locations, durations, search } = req.query;
 
         let query: any = {};
@@ -30,9 +31,8 @@ router.get('/', async (req: Request, res: Response) => {
 
         // Search-Filter (name durchsuchen)
         if (search) {
-            query.name = { $regex: new RegExp(search, 'i') };  // Regulärer Ausdruck für den Suchbegriff
+            query.name = { $regex: new RegExp(search, 'i') };  // Sucht nach dem Suchbegriff im Namen (Groß-/Kleinschreibung ignoriert)
         }
-
         const tournaments = await TournamentModel.find(query);
         res.status(200).json(tournaments);
     } catch (error) {
