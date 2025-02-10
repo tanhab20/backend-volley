@@ -14,7 +14,7 @@ router.get('/', async (req: Request, res: Response) => {
 
         if (locations) {
             const locationArray = (locations as string).split(',');
-            query.location = { $in: locationArray };
+            query.location = { $regex: locationArray.join('|'), $options: 'i' };
         }
 
         if (durations) {
