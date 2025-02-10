@@ -1,3 +1,5 @@
+import {ITournament} from "../../interface/ITournament";
+
 describe('Tournament API Tests', () => {
 
     it('should fetch all tournaments', () => {
@@ -148,6 +150,22 @@ describe('Tournament API Tests', () => {
             expect(response.body).to.have.property('location', newTournament.location);
             expect(response.body).to.have.property('duration').and.equal(`${newTournament.duration}`); // Erwartung als String
             expect(response.body).to.have.property('description', newTournament.description);
+        });
+    });
+
+    it('should filter tournaments by location', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: {
+                locations: 'Berlin,Hamburg'
+            }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            // Typ für 'tournament' definieren
+            response.body.forEach((tournament: ITournament) => {
+                expect(['Berlin', 'Hamburg']).to.include(tournament.location);
+            });
         });
     });
 
