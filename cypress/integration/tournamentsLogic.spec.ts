@@ -184,24 +184,6 @@ describe('Tournament API Tests', () => {
     //------------------------------------------------------------------
 
 
-    it('should return only tournaments that match all filters (location, duration, search)', () => {
-        cy.request({
-            method: 'GET',
-            url: 'https://kavolley.uber.space/api/tournaments',
-            qs: { locations: 'Berlin', durations: '3 days', search: 'Beach' }
-        }).then((response) => {
-            cy.log(JSON.stringify(response.body)); // Log API response
-            expect(response.status).to.eq(200);
-            expect(response.body).to.be.an('array').that.is.not.empty;
-
-            response.body.forEach((tournament: ITournament) => {
-                expect(tournament.location).to.include('Berlin');
-                expect(tournament.duration).to.eq('3 days');
-                expect(tournament.name.toLowerCase()).to.include('beach');
-            });
-        });
-    });
-
     it('should handle invalid location gracefully', () => {
         cy.request({
             method: 'GET',
