@@ -52,37 +52,37 @@ describe('Tournament API Tests', () => {
         });
     });
 
-    //it('should update a tournament successfully', () => {
-    //    const initialTournament = {
-    //        name: 'Oster-Pokal',
-    //        date: new Date().toISOString(),
-    //        location: 'Leipzig',
-    //        duration: 3,
-    //        description: 'Ein aufregendes Turnier rund um die Osterzeit.',
-    //    };
-//
-    //    cy.request('POST', 'http://localhost:4000/tournaments', initialTournament).then((postResponse) => {
-    //        const { _id } = postResponse.body;
-//
-    //        const updatedTournament = {
-    //            name: 'Aktualisiertes Turnier',
-    //            date: new Date().toISOString(),
-    //            location: 'Hamburg',
-    //            duration: 3,
-    //            description: 'Beschreibung nach der Aktualisierung.',
-    //        };
-//
-    //        cy.request({
-    //            method: 'PUT',
-    //            url: `http://localhost:4000/tournaments/${_id}`,
-    //            body: updatedTournament,
-    //            failOnStatusCode: false,  // Allow the test to continue even if the request fails
-    //        }).then((putResponse) => {
-    //            console.log(putResponse);  // Log the response to check the status and body for debugging
-    //            expect(putResponse.status).to.eq(200);
-    //        });
-    //    });
-    //});
+    it('should update a tournament successfully', () => {
+        const initialTournament = {
+            name: 'Oster-Pokal',
+            date: new Date().toISOString(),
+            location: 'Leipzig',
+            duration: 3,
+            description: 'Ein aufregendes Turnier rund um die Osterzeit.',
+        };
+
+        cy.request('POST', 'http://localhost:4000/tournaments', initialTournament).then((postResponse) => {
+            const { _id } = postResponse.body;
+
+            const updatedTournament = {
+                name: 'Aktualisiertes Turnier',
+                date: new Date().toISOString(),
+                location: 'Hamburg',
+                duration: 3,
+                description: 'Beschreibung nach der Aktualisierung.',
+            };
+
+            cy.request({
+                method: 'PUT',
+                url: `http://localhost:4000/tournaments/${_id}`,
+                body: updatedTournament,
+                failOnStatusCode: false,  // Allow the test to continue even if the request fails
+            }).then((putResponse) => {
+                console.log(putResponse);  // Log the response to check the status and body for debugging
+                expect(putResponse.status).to.eq(200);
+            });
+        });
+    });
 
 
 

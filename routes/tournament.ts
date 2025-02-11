@@ -8,9 +8,10 @@ const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     try {
-        console.log("🔍 HALLO ICH BIN IM FILTER VERZEICHNIS");
+        console.log("HALLO ICH BIN IM FILTER VERZEICHNIS");
 
-        // Query-Parameter extrahieren
+        // Prüft ob locations ein array ist, falls ned wird es zu einem converted
+        // entfernt leerzeichen mit trim()
         const locations = Array.isArray(req.query.locations)
             ? req.query.locations
             : (req.query.locations as string)?.split(',').map(loc => loc.trim());
@@ -23,27 +24,47 @@ router.get('/', async (req: Request, res: Response) => {
 
         let query: any = {};
 
-        // Locations-Filter
+        // Falls ein 'locations'-Filter vorhanden ist
         if (locations?.length) {
+            /**
+             * Erstellt eine Regex-Bedingung für MongoDB:
+             * - `locations.join('|')` kombiniert alle Werte mit `|` (ODER-Operator).
+             * - `new RegExp(..., 'i')` erstellt eine case-insensitive Suche.
+             * - Beispiel: ["Berlin", "München"] → `/Berlin|München/i`
+             * - Dies ermöglicht die Suche nach Turnieren, die in "Berlin" ODER "München" stattfinden.
+             */
             query.location = { $regex: new RegExp(locations.join('|'), 'i') };
         }
 
-        // Duration-Filter
+        // Falls ein 'durations'-Filter vorhanden ist
         if (durations?.length) {
+            /**
+             * Erstellt eine MongoDB `$in`-Bedingung:
+             * - `$in` prüft, ob der `duration`-Wert in der `durations`-Liste enthalten ist.
+             * - Beispiel: [3, 5] → `{ duration: { $in: [3, 5] } }`
+             * - Dies erlaubt eine exakte Übereinstimmung mit einer der angegebenen Dauerwerte.
+             */
             query.duration = { $in: durations };
         }
 
-        // Search-Filter (Name durchsuchen)
+        // Falls ein 'search'-Filter für den Turniernamen vorhanden ist
         if (search) {
+            /**
+             * Erstellt eine Regex-Bedingung für die Namenssuche:
+             * - `new RegExp(search, 'i')` sucht nach beliebigen Übereinstimmungen im Namen.
+             * - `i` bedeutet, dass Groß-/Kleinschreibung ignoriert wird.
+             * - Beispiel: "Champions" → `/Champions/i`
+             * - Dies erlaubt die Suche nach Turniernamen, die "Champions" enthalten (z. B. "Champions League").
+             */
             query.name = { $regex: new RegExp(search, 'i') };
         }
 
-        console.log("🛠️ Filter Query:", JSON.stringify(query, null, 2));
+        console.log("Filter Query:", JSON.stringify(query, null, 2));
 
         const tournaments = await TournamentModel.find(Object.keys(query).length ? query : {});
         res.status(200).json(tournaments);
     } catch (error) {
-        console.error("❌ Fehler beim Abrufen der Turniere:", error);
+        console.error("Fehler beim Abrufen der Turniere:", error);
         res.status(500).json({ error: 'Fehler beim Abrufen der Turniere' });
     }
 });
