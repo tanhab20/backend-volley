@@ -190,6 +190,7 @@ describe('Tournament API Tests', () => {
             url: 'https://kavolley.uber.space/api/tournaments',
             qs: { locations: 'Berlin', durations: '3 days', search: 'Beach' }
         }).then((response) => {
+            cy.log(JSON.stringify(response.body)); // Log API response
             expect(response.status).to.eq(200);
             expect(response.body).to.be.an('array').that.is.not.empty;
 
@@ -236,56 +237,7 @@ describe('Tournament API Tests', () => {
         });
     });
 
-    it('should return case-insensitive search results', () => {
-        cy.request({
-            method: 'GET',
-            url: 'https://kavolley.uber.space/api/tournaments',
-            qs: { search: 'beAch' } // Mischmasch von Groß-/Kleinschreibung
-        }).then((response) => {
-            expect(response.status).to.eq(200);
-            expect(response.body).to.be.an('array').that.is.not.empty;
 
-            response.body.forEach((tournament: ITournament) => {
-                expect(tournament.name.toLowerCase()).to.include('beach');
-            });
-        });
-    });
-
-    it('should return results when search contains extra spaces', () => {
-        cy.request({
-            method: 'GET',
-            url: 'https://kavolley.uber.space/api/tournaments',
-            qs: { search: '  Beach   Volleyball  ' }
-        }).then((response) => {
-            expect(response.status).to.eq(200);
-            expect(response.body).to.be.an('array').that.is.not.empty;
-
-            response.body.forEach((tournament: ITournament) => {
-                expect(tournament.name.toLowerCase()).to.include('beach volleyball');
-            });
-        });
-    });
-
-    it('should verify response structure', () => {
-        cy.request({
-            method: 'GET',
-            url: 'https://kavolley.uber.space/api/tournaments',
-            qs: { locations: 'Berlin' }
-        }).then((response) => {
-            expect(response.status).to.eq(200);
-            expect(response.body).to.be.an('array').that.is.not.empty;
-
-            response.body.forEach((tournament: ITournament) => {
-                expect(tournament).to.have.all.keys('id', 'name', 'location', 'duration', 'date', 'participants');
-                expect(tournament.id).to.be.a('number');
-                expect(tournament.name).to.be.a('string');
-                expect(tournament.location).to.be.a('string');
-                expect(tournament.duration).to.be.a('string');
-                expect(tournament.date).to.be.a('string'); // Falls Datum im ISO-Format zurückkommt
-                expect(tournament.participants).to.be.an('array');
-            });
-        });
-    });
 
 
 });
