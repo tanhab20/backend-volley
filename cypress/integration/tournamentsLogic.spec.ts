@@ -33,8 +33,8 @@ describe('Tournament API Tests', () => {
         const tournamentToFetch = {
             name: 'Hallenmeisterschaft',
             date: new Date().toISOString(),
-            location: 'Köln',
-            duration: 2,
+            location: 'Köln, Dom',
+            duration: "2 days",
             description: 'Ein Hallenturnier mit Teams aus ganz Deutschland.',
         };
 
@@ -90,8 +90,8 @@ describe('Tournament API Tests', () => {
         const newTournament = {
             name: 'Turnier zum Löschen',
             date: new Date().toISOString(),
-            location: 'Berlin',
-            duration: 2,
+            location: 'Berlin, Halle',
+            duration: "2 days",
             description: 'Dies ist ein Test-Turnier, das gelöscht wird.',
         };
 
@@ -122,8 +122,8 @@ describe('Tournament API Tests', () => {
         const newTournament = {
             name: 'Sommer-Cup',
             date: new Date().toISOString(),
-            location: 'München',
-            duration: 3,
+            location: 'München, Olympiapark',
+            duration: "3 days",
             description: 'Ein spannendes Turnier für Sommerliebhaber.',
         };
 
@@ -138,8 +138,8 @@ describe('Tournament API Tests', () => {
         const newTournament = {
             name: 'Frühjahrsmeisterschaft',
             date: new Date().toISOString(),
-            location: 'Frankfurt',
-            duration: 4,
+            location: 'Frankfurt, Hauptbahnhof',
+            duration: "4 days",
             description: 'Ein aufregendes Turnier im Frühling.'
         };
 
