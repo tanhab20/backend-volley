@@ -89,6 +89,7 @@ router.post('/', async (req: Request, res: Response) => {
     const { name, date, location, duration, description }: ITournament = req.body;
 
     try {
+
         const newTournament = new TournamentModel({
             name,
             date: new Date(date),
@@ -96,6 +97,15 @@ router.post('/', async (req: Request, res: Response) => {
             duration,
             description
         });
+
+        if(!newTournament.name || !newTournament.date || !newTournament.location || !newTournament.duration ||!newTournament.description) {
+            res.status(500).json({ message: 'Turnier erfüllt nicht alle Parameter' });
+        }
+
+        const existingTournament = await TournamentModel.find({name});
+        if(existingTournament) {
+            res.status(500).json({ message: 'Turnier gibt es schon!' });
+        }
 
         const savedTournament = await newTournament.save();
         res.status(201).json(savedTournament);

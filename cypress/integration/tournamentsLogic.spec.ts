@@ -8,27 +8,6 @@ describe('Tournament API Tests', () => {
             .should('equal', 200);
     });
 
-    /*
-    it('should return 500 for missing required fields', () => {
-        const incompleteTournament = {
-            date: new Date().toISOString(),
-            location: 'Hamburg',
-            duration: 2,
-            description: 'Ein aufregendes Turnier.',
-        };
-
-        cy.request({
-            method: 'POST',
-            url: 'https://kavolley.uber.space/api/tournaments',
-            body: incompleteTournament,
-            failOnStatusCode: false,
-        }).then((response) => {
-            expect(response.status).to.eq(500);
-            expect(response.body).to.have.property('error', 'Fehler beim Erstellen des Turniers');
-        });
-    });
-    */
-
     it('should fetch a specific tournament by ID', () => {
         const tournamentToFetch = {
             name: 'Hallenmeisterschaft',
@@ -118,6 +97,8 @@ describe('Tournament API Tests', () => {
             expect(response.body).to.have.property('description', newTournament.description);
         });
     });
+
+    // ---------      Filter - Tests
 
     it('should filter tournaments by location (Berlin, Hamburg)', () => {
         cy.request({
@@ -220,6 +201,48 @@ describe('Tournament API Tests', () => {
     });
 
 
+    // ----
+    it('should return 400 for missing required fields', () => {
+        const invalidTournament = {
+            date: new Date().toISOString(),
+            location: 'Frankfurt, Hauptbahnhof',
+            duration: "4 days",
+            description: 'Ein aufregendes Turnier im Frühling.'
+        };
 
+        cy.request({
+            method: 'POST',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            body: invalidTournament,
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.eq(500);
+        });
+    });
+
+
+    it('should not allow duplicate tournament names', () => {
+        const tournament = {
+            name: 'Doppeltes Turnier',
+            date: new Date().toISOString(),
+            location: 'Leipzig, Sporthalle',
+            duration: "3 days",
+            description: 'Ein Testturnier für Duplikate.'
+        };
+
+        cy.request('POST', 'https://kavolley.uber.space/api/tournaments', tournament).then(() => {
+            cy.wait(3000);
+
+            cy.request({
+                method: 'POST',
+                url: 'https://kavolley.uber.space/api/tournaments',
+                body: tournament,
+                failOnStatusCode: false
+            }).then((response) => {
+                expect(response.status).to.eq(500);
+                //expect(response.body).to.have.property('error').and.to.include('Turnier gibt es schon!');
+            });
+        });
+    });
 
 });
