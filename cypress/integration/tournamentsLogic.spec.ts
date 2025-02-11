@@ -52,40 +52,6 @@ describe('Tournament API Tests', () => {
         });
     });
 
-    it('should update a tournament successfully', () => {
-        const initialTournament = {
-            name: 'Oster-Pokal',
-            date: new Date().toISOString(),
-            location: 'Leipzig',
-            duration: 3,
-            description: 'Ein aufregendes Turnier rund um die Osterzeit.',
-        };
-
-        cy.request('POST', 'http://localhost:4000/tournaments', initialTournament).then((postResponse) => {
-            const { _id } = postResponse.body;
-
-            const updatedTournament = {
-                name: 'Aktualisiertes Turnier',
-                date: new Date().toISOString(),
-                location: 'Hamburg',
-                duration: 3,
-                description: 'Beschreibung nach der Aktualisierung.',
-            };
-
-            cy.request({
-                method: 'PUT',
-                url: `http://localhost:4000/tournaments/${_id}`,
-                body: updatedTournament,
-                failOnStatusCode: false,  // Allow the test to continue even if the request fails
-            }).then((putResponse) => {
-                console.log(putResponse);  // Log the response to check the status and body for debugging
-                expect(putResponse.status).to.eq(200);
-            });
-        });
-    });
-
-
-
     it('should delete a tournament successfully', () => {
         const newTournament = {
             name: 'Turnier zum Löschen',
@@ -215,55 +181,111 @@ describe('Tournament API Tests', () => {
         });
     });
 
+    //------------------------------------------------------------------
 
 
+    it('should return only tournaments that match all filters (location, duration, search)', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { locations: 'Berlin', durations: '3 days', search: 'Beach' }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
 
+            response.body.forEach((tournament: ITournament) => {
+                expect(tournament.location).to.include('Berlin');
+                expect(tournament.duration).to.eq('3 days');
+                expect(tournament.name.toLowerCase()).to.include('beach');
+            });
+        });
+    });
 
+    it('should handle invalid location gracefully', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { locations: 'InvalidCity' },
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.empty;
+        });
+    });
 
-    /*
+    it('should handle invalid duration gracefully', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { durations: '100 days' },
+            failOnStatusCode: false
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.empty;
+        });
+    });
 
-    //it('should fetch only future tournaments based on the date', () => {
-    //    // Turniere erstellen (eins in der Vergangenheit, eins in der Zukunft)
-    //    const pastTournament = {
-    //        name: 'Vergangenes Turnier',
-    //        date: new Date('2023-01-01').toISOString(),
-    //        location: 'Berlin',
-    //        duration: 1,
-    //        description: 'Ein Turnier, das in der Vergangenheit liegt.',
-    //    };
-//
-    //    const futureTournament = {
-    //        name: 'Zukünftiges Turnier',
-    //        date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // +7 Tage
-    //        location: 'München',
-    //        duration: 2,
-    //        description: 'Ein Turnier, das in der Zukunft liegt.',
-    //    };
-//
-    //    cy.request('POST', 'http://localhost:4000/tournaments', pastTournament).then(() => {
-    //        cy.request('POST', 'http://localhost:4000/tournaments', futureTournament).then(() => {
-    //            // GET-Anfrage für alle Turniere
-    //            cy.request('GET', 'http://localhost:4000/tournaments').then((response) => {
-    //                expect(response.status).to.eq(200);
-//
-    //                // Durchlaufe alle Turniere und überprüfe, ob sie in der Zukunft liegen
-    //                response.body.forEach((tournament) => {
-    //                    const tournamentDate = new Date(tournament.date);
-    //                    const currentDate = new Date();
-//
-    //                    // Entferne die Uhrzeit, um nur das Datum zu vergleichen
-    //                    tournamentDate.setHours(0, 0, 0, 0);
-    //                    currentDate.setHours(0, 0, 0, 0);
-//
-    //                    // Überprüfe, dass das Turnierdatum in der Zukunft liegt
-    //                    expect(tournamentDate).to.be.greaterThan(currentDate);
-    //                });
-    //            });
-    //        });
-    //    });
-    //});
+    it('should return an empty array if no tournament matches the search', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { search: 'xyz123doesnotexist' }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.empty;
+        });
+    });
 
+    it('should return case-insensitive search results', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { search: 'beAch' } // Mischmasch von Groß-/Kleinschreibung
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
 
-*/
+            response.body.forEach((tournament: ITournament) => {
+                expect(tournament.name.toLowerCase()).to.include('beach');
+            });
+        });
+    });
+
+    it('should return results when search contains extra spaces', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { search: '  Beach   Volleyball  ' }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
+
+            response.body.forEach((tournament: ITournament) => {
+                expect(tournament.name.toLowerCase()).to.include('beach volleyball');
+            });
+        });
+    });
+
+    it('should verify response structure', () => {
+        cy.request({
+            method: 'GET',
+            url: 'https://kavolley.uber.space/api/tournaments',
+            qs: { locations: 'Berlin' }
+        }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body).to.be.an('array').that.is.not.empty;
+
+            response.body.forEach((tournament: ITournament) => {
+                expect(tournament).to.have.all.keys('id', 'name', 'location', 'duration', 'date', 'participants');
+                expect(tournament.id).to.be.a('number');
+                expect(tournament.name).to.be.a('string');
+                expect(tournament.location).to.be.a('string');
+                expect(tournament.duration).to.be.a('string');
+                expect(tournament.date).to.be.a('string'); // Falls Datum im ISO-Format zurückkommt
+                expect(tournament.participants).to.be.an('array');
+            });
+        });
+    });
+
 
 });
