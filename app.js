@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
-var tournamentRouter = require('./routes/tournament');
+    var tournamentRouter = require('./routes/tournament');
 
 const { initializeDB } = require('./db/Tournament.service.db');
 initializeDB();

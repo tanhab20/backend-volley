@@ -17,7 +17,27 @@ const Tournaments_model_db_1 = require("../db/Tournaments.model.db");
 const router = express_1.default.Router();
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tournaments = yield Tournaments_model_db_1.TournamentModel.find();
+        const { locations, durations, search } = req.query;
+        let query = {};
+        // Locations filtern (nur die Stadt berücksichtigen)
+        if (locations) {
+            const locationArray = locations
+                .split(',')
+                .map(location => location.trim()); // Leerzeichen entfernen
+            query.location = { $in: locationArray.map(location => location.split(',')[0].trim()) };
+        }
+        // Durations filtern
+        if (durations) {
+            const durationArray = durations
+                .split(',')
+                .map(duration => duration.trim()); // Leerzeichen entfernen
+            query.duration = { $in: durationArray };
+        }
+        // Search-Filter (name durchsuchen)
+        if (search) {
+            query.name = { $regex: new RegExp(search, 'i') }; // Regulärer Ausdruck für den Suchbegriff
+        }
+        const tournaments = yield Tournaments_model_db_1.TournamentModel.find(query);
         res.status(200).json(tournaments);
     }
     catch (error) {

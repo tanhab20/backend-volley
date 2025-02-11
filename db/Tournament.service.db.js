@@ -17,6 +17,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Tournaments_model_db_1 = require("./Tournaments.model.db");
 const turnier_mock_1 = require("../mock/turnier_mock");
 const DB_URL = 'mongodb://admin:admin@localhost:27017/volley_master?authSource=admin';
+//const DB_URL = 'mongodb://localhost:27017/volley_master';
 const initializeDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Clear the existing tournaments and insert mock data
