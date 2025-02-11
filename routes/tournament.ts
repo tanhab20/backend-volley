@@ -99,6 +99,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     }
 });
 
+//@ts-ignore
 router.patch('/:id', async (req: Request, res: Response) => {
     try {
         const { name, date, location, duration, description } = req.body;
